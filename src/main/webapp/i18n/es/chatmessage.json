@@ -1,0 +1,23 @@
+{
+  "spingularchatApp": {
+    "chatmessage": {
+      "home": {
+        "title": "Chatmessages",
+        "createLabel": "Crear nuevo Chatmessage",
+        "createOrEditLabel": "Crear o editar Chatmessage"
+      },
+      "created": "Un nuevo Chatmessage ha sido creado con el identificador {{ param }}",
+      "updated": "Un Chatmessage ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Chatmessage ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Chatmessage {{ id }}?"
+      },
+      "detail": {
+        "title": "Chatmessage"
+      },
+      "userLogin": "User Login",
+      "message": "Message",
+      "time": "Time"
+    }
+  }
+}

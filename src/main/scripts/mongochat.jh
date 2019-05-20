@@ -1,0 +1,15 @@
+entity Chatmessage {
+    userLogin String
+    message String
+    time String
+}
+
+// DTO for all
+dto * with mapstruct
+
+// Set service options to all except few
+// service all with serviceImpl
+service all with serviceClass
+
+//Filtering
+filter *
