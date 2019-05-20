@@ -1,17 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs';
-import { Location } from '@angular/common';
-
-import { CSRFService } from '../auth/csrf.service';
-import { WindowRef } from './window.service';
-import { AuthServerProvider } from '../auth/auth-jwt.service';
 
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
+import { CSRFService, AuthServerProvider } from 'app/core';
 
-@Injectable({ providedIn: 'root' })
-export class JhiTrackerService {
+import { WindowRef } from 'app/core/tracker/window.service';
+
+@Injectable()
+export class ChatService {
   stompClient = null;
   subscriber = null;
   connection: Promise<any>;
@@ -24,8 +22,7 @@ export class JhiTrackerService {
   constructor(
     private router: Router,
     private authServerProvider: AuthServerProvider,
-    private location: Location,
-    // tslint:disable-next-line: no-unused-variable
+    private $window: WindowRef,
     private csrfService: CSRFService
   ) {
     this.connection = this.createConnection();
@@ -36,9 +33,9 @@ export class JhiTrackerService {
     if (this.connectedPromise === null) {
       this.connection = this.createConnection();
     }
-    // building absolute path so that websocket doesn't fail when deploying with a context path
-    let url = '/websocket/tracker';
-    url = this.location.prepareExternalUrl(url);
+    // building absolute path so that websocket doesnt fail when deploying with a context path
+    const loc = this.$window.nativeWindow.location;
+    let url = '//' + loc.host + loc.pathname + 'websocket/chat';
     const authToken = this.authServerProvider.getToken();
     if (authToken) {
       url += '?access_token=' + authToken;
@@ -49,13 +46,8 @@ export class JhiTrackerService {
     this.stompClient.connect(headers, () => {
       this.connectedPromise('success');
       this.connectedPromise = null;
-      this.sendActivity();
+      this.subscribe();
       if (!this.alreadyConnectedOnce) {
-        this.subscription = this.router.events.subscribe(event => {
-          if (event instanceof NavigationEnd) {
-            this.sendActivity();
-          }
-        });
         this.alreadyConnectedOnce = true;
       }
     });
@@ -77,11 +69,11 @@ export class JhiTrackerService {
     return this.listener;
   }
 
-  sendActivity() {
+  sendMessage(message) {
     if (this.stompClient !== null && this.stompClient.connected) {
       this.stompClient.send(
-        '/topic/activity', // destination
-        JSON.stringify({ page: this.router.routerState.snapshot.url }), // body
+        '/chat', // destination
+        JSON.stringify({ message }), // body
         {} // header
       );
     }
@@ -89,7 +81,7 @@ export class JhiTrackerService {
 
   subscribe() {
     this.connection.then(() => {
-      this.subscriber = this.stompClient.subscribe('/topic/tracker', data => {
+      this.subscriber = this.stompClient.subscribe('/chat/public', data => {
         this.listenerObserver.next(JSON.parse(data.body));
       });
     });
