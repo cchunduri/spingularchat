@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.spingular.chat",
+      "nativeLanguage": "en"
+    },
+    "jhipsterVersion": "6.0.1",
+    "applicationType": "monolith",
+    "baseName": "spingularchat",
+    "packageName": "com.spingular.chat",
+    "packageFolder": "com/spingular/chat",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": false,
+    "websocket": "spring-websocket",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "prodDatabaseType": "mongodb",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YjU2MDE5ZjgxMTZhNTVmMDA4MGQ1NTk0MmIyZjE0MTg3ZjY4ZWY3ZTNiZmM5ZGRlZTAzN2QwODY2Yjc0MTAzMmRlYjJmNDBlZDZhMGI4MDY2ZGY1ZDk5MmIxM2RmOTVjNDVmODYzOGNmZjEyNTI4NzUxOGE3MzhjZmY5YmMzNDk=",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": ["gatling", "cucumber", "protractor"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "en",
+    "languages": ["en", "es"]
+  }
+}
