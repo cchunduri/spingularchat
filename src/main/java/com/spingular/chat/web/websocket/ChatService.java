@@ -1,9 +1,12 @@
 package com.spingular.chat.web.websocket;
 
 import com.spingular.chat.security.SecurityUtils;
+import com.spingular.chat.service.ChatmessageService;
+import com.spingular.chat.service.dto.ChatmessageDTO;
 import com.spingular.chat.web.websocket.dto.MessageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,6 +32,9 @@ public class ChatService implements ApplicationListener<SessionDisconnectEvent> 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final SimpMessageSendingOperations messagingTemplate;
+    
+    @Autowired
+    private ChatmessageService chatmessageService;
 
     public ChatService(SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
@@ -51,6 +57,13 @@ public class ChatService implements ApplicationListener<SessionDisconnectEvent> 
     @SendTo("/chat/public")
     public MessageDTO sendChat(@Payload MessageDTO messageDTO, StompHeaderAccessor stompHeaderAccessor, Principal principal) {
         messageDTO.setUserLogin(principal.getName());
+    	ChatmessageDTO chatmessageDTO = new ChatmessageDTO();
+    	chatmessageDTO.setMessage(messageDTO.getMessage());
+    	chatmessageDTO.setTime(dateTimeFormatter.format(ZonedDateTime.now()));
+    	chatmessageDTO.setUserLogin(messageDTO.getUserLogin());
+        log.debug("Message Recieved from sender {} ", messageDTO);
+    	log.debug("Saving Chat Message : {}", chatmessageDTO);
+        chatmessageService.save(chatmessageDTO);
         return setupMessageDTO(messageDTO, stompHeaderAccessor, principal);
     }
 

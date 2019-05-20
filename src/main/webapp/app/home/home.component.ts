@@ -5,6 +5,12 @@ import { ChatService } from '../shared';
 
 import { LoginModalService, AccountService, Account } from 'app/core';
 
+import { Observable } from 'rxjs';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+
+import { IChatmessage, Chatmessage } from 'app/shared/model/chatmessage.model';
+import { ChatmessageService } from '../entities/chatmessage/chatmessage.service';
+
 @Component({
   selector: 'jhi-home',
   templateUrl: './home.component.html',
@@ -15,12 +21,14 @@ export class HomeComponent implements OnInit {
   modalRef: NgbModalRef;
   messages: Array<Object> = [];
   message = '';
+  private _chatmessage: IChatmessage = { userLogin: null, message: null, time: null };
 
   constructor(
     private accountService: AccountService,
     private loginModalService: LoginModalService,
     private eventManager: JhiEventManager,
-    private chatService: ChatService
+    private chatService: ChatService,
+    protected chatmessageService: ChatmessageService
   ) {}
 
   ngOnInit() {
@@ -65,7 +73,16 @@ export class HomeComponent implements OnInit {
     if (message.length === 0) {
       return;
     }
-    this.chatService.sendMessage(message);
+    const chatMessage = {
+      message: '',
+      userLogin: '',
+      time: new Date()
+    };
+    chatMessage.message = message;
+    chatMessage.userLogin = this.account.login;
+    chatMessage.time = new Date();
+
+    this.chatService.sendMessage(chatMessage);
     this.message = '';
   }
 }

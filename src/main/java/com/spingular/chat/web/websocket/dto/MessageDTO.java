@@ -1,5 +1,7 @@
 package com.spingular.chat.web.websocket.dto;
 
+import java.util.StringJoiner;
+
 /**
  * DTO for storing a user's message.
  */
@@ -37,10 +39,11 @@ public class MessageDTO {
 
     @Override
     public String toString() {
-        return "MessageDTO{" +
-            ", message='" + message + '\'' +
-            ", time='" + time + '\'' +
-            '}';
+        return new StringJoiner(", ", MessageDTO.class.getSimpleName() + "[", "]")
+                .add("userLogin='" + userLogin + "'")
+                .add("message='" + message + "'")
+                .add("time='" + time + "'")
+                .toString();
     }
 }
 
